@@ -3,21 +3,21 @@ import java.util.Map;
 
 public class Transcript {
 	
-	private final String[] keyboard;
 	private final String objective, typed;
 	private final int MAX_POINTS;
 	private final Map<Character, Integer[]> keyCoordinates;
+	private final int[][] maxScore;
 	
 	public Transcript(String[] keyboard, String objective, String typed) {
-		this.keyboard = keyboard;
 		this.objective = " " + objective;
 		this.typed = " " + typed;
-		MAX_POINTS = Math.max(this.keyboard.length, this.keyboard[0].length());
+		MAX_POINTS = Math.max(keyboard.length, keyboard[0].length());
 		keyCoordinates = new HashMap<>();
-		fillKeyCoordinatesMap();
+		fillKeyCoordinatesMap(keyboard);
+		maxScore = new int[this.objective.length()][this.typed.length()];
 	}
 	
-	private void fillKeyCoordinatesMap() {
+	private void fillKeyCoordinatesMap(String[] keyboard) {
 		for (int i = 0; i < keyboard.length; i++) {
 			for (int j = 0; j < keyboard[0].length(); j++) {
 				keyCoordinates.put(keyboard[i].charAt(j), new Integer[] {i, j});
@@ -26,18 +26,18 @@ public class Transcript {
 	}
 	
 	public int solve() {
-		return solve(objective.length() - 1, typed.length() - 1);
-	}
-	
-	private int solve(int i, int j) {
-		if (i == 0) {
-			return 0;
-		}
-		if (j == 0) {
-			return solve(i-1, j) - MAX_POINTS;
+		for (int i = 1; i < objective.length(); i++) {
+			maxScore[i][0] = maxScore[i-1][0] - MAX_POINTS;
 		}
 		
-		return Math.max(solve(i-1, j-1) + MAX_POINTS - distance(objective.charAt(i), typed.charAt(j)), solve(i-1, j) - MAX_POINTS);
+		for (int i = 2; i < objective.length(); i++) {
+			for (int j = 1; j < typed.length(); j++) {
+				maxScore[i][j] = Math.max(maxScore[i-1][j-1] + MAX_POINTS - distance(objective.charAt(i), typed.charAt(j)),
+											maxScore[i-1][0] - MAX_POINTS);
+			}
+		}
+		
+		return maxScore[objective.length()-1][typed.length()-1];
 	}
 	
 	private int distance(char key1, char key2) {
