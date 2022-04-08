@@ -30,10 +30,15 @@ public class Transcript {
 			maxScore[i][0] = maxScore[i-1][0] - MAX_POINTS;
 		}
 		
-		for (int i = 2; i < objective.length(); i++) {
+		for (int i = 1; i < objective.length(); i++) {
 			for (int j = 1; j < typed.length(); j++) {
-				maxScore[i][j] = Math.max(maxScore[i-1][j-1] + MAX_POINTS - distance(objective.charAt(i), typed.charAt(j)),
-											maxScore[i-1][0] - MAX_POINTS);
+				if (j < i) {
+					maxScore[i][j] = Math.max(maxScore[i-1][j-1] + MAX_POINTS - distance(objective.charAt(i), typed.charAt(j)), maxScore[i-1][j] - MAX_POINTS);
+				}
+				else {
+					maxScore[i][j] = maxScore[i-1][j-1] + MAX_POINTS - distance(objective.charAt(i), typed.charAt(j));
+					break;
+				}
 			}
 		}
 		
