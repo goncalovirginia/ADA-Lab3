@@ -49,8 +49,7 @@ public class Transcript {
 		Integer[] key1Coordinates = keyCoordinates.get(key1);
 		Integer[] key2Coordinates = keyCoordinates.get(key2);
 		
-		return Math.max(Math.abs(key1Coordinates[0] - key2Coordinates[0]),
-				Math.abs(key1Coordinates[1] - key2Coordinates[1]));
+		return Math.max(Math.abs(key1Coordinates[0] - key2Coordinates[0]), Math.abs(key1Coordinates[1] - key2Coordinates[1]));
 	}
 	
 }
